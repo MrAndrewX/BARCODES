@@ -90,6 +90,11 @@ public class Code11 {
 
 
         }
+        //Sacamos de la lista el valor mayor y el valor menor para poder decidir que interpretar como linea gruesa o delgada.
+        int max = Collections.max(numbers);
+        int min = Collections.min(numbers);
+        System.out.println(max);
+        System.out.println(min);
 
 
         System.out.println(numbers);
