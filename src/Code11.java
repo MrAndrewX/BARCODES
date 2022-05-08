@@ -71,15 +71,20 @@ public class Code11 {
         String str = s.trim();
         List<Integer> numbers = new ArrayList<>();
         int numerolinea = 0;
+
         int j = 0;
         for (int i = 0; i < str.length();) {
             char c = str.charAt(i);
             char k = str.charAt(j);
+
             if (c == k){
+
+                numerolinea++;
+
                 if (j == str.length()-1){
+                    numbers.add(numerolinea);
                     break;
                 }
-                numerolinea++;
                 j++;
             }else {
                 numbers.add(numerolinea);
