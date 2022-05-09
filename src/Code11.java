@@ -100,9 +100,22 @@ public class Code11 {
         int min = Collections.min(numbers);
         System.out.println(max);
         System.out.println(min);
+        String strvariable ="";
+        int limite = max;
 
+        for (int i = 0; i < numbers.size(); i++) {
+           if (numbers.get(i) >= limite){
+               strvariable += "1";
+           }else if (numbers.get(i) < limite){
+               strvariable += "0";
+           }
+
+        }
 
         System.out.println(numbers);
+        System.out.println(strvariable);
+
+
         for (int i = 0; i < str.length(); i++) {
 
                 char c = str.charAt(i);

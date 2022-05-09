@@ -23,7 +23,7 @@ public class Code11Test {
 
     @Test
     public void decodeTest2() {
-        //assertEquals("*0*", Code11.decode("█ ███   █ █ █ ███ █ ███   █"));
+        assertEquals("*0*", Code11.decode("█ ███   █ █ █ ███ █ ███   █"));
         assertEquals("*0*", Code11.decode("██ ███   █ █ █ ███ █ ███   █"));
 
         assertEquals("*0*", Code11.decode("███   █████     ███   ███   ███   █████   ███   █████     ███"));
