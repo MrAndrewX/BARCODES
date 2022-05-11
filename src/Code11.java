@@ -218,13 +218,31 @@ public class Code11 {
         int coordY = Integer.parseInt(cordinates[1]);
         System.out.println("X:"+coordX+" y:"+coordY);
 
-        List<String> parsedList = new ArrayList<>();
-        list.subList(4,list.size());
+        List<String> parsedListWithoutText = new ArrayList<>();
+        parsedListWithoutText = list.subList(4,list.size());
+        //System.out.println(parsedListWithoutText);
+        List<String> rgbList = new ArrayList<>();
+
+        for (int i = 0; i < parsedListWithoutText.size(); i+=3) {
+            rgbList.add((String.valueOf((
+                    Integer.parseInt(parsedListWithoutText.get(i)) +
+                    Integer.parseInt(parsedListWithoutText.get(i+1)) +
+                    Integer.parseInt(parsedListWithoutText.get(i+2))/3))));
+
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < coordX; i++) {
+            if (Integer.parseInt(rgbList.get(i)) < 100){
+                result.append("█");
+            }else{
+                result.append(" ");
+            }
+        }
+        System.out.println(result);
 
 
 
-
-        return "" ;
+        return decode(result.toString());
     }
 
     // Genera imatge a partir de codi de barres
