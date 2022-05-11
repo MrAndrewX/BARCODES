@@ -208,7 +208,23 @@ public class Code11 {
 
     // Decodifica una imatge. La imatge ha d'estar en format "ppm"
     public static String decodeImage(String str) {
-        return "";
+        System.out.println(str.length());
+        List<String> list = new ArrayList<>();
+
+        list = List.of(str.split("\n"));
+        //System.out.println(list);
+        String[] cordinates = list.get(2).split(" ");
+        int coordX = Integer.parseInt(cordinates[0]);
+        int coordY = Integer.parseInt(cordinates[1]);
+        System.out.println("X:"+coordX+" y:"+coordY);
+
+        List<String> parsedList = new ArrayList<>();
+        list.subList(4,list.size());
+
+
+
+
+        return "" ;
     }
 
     // Genera imatge a partir de codi de barres
