@@ -237,7 +237,7 @@ public class Code11 {
 
         String matches = "";
 
-        Pattern p = Pattern.compile("\\d{3}\\s\\d{3}");
+        Pattern p = Pattern.compile("\\d+\\s\\d+");
         int contador = 0;
         for (int i = 0; i<list.size();i++) {
         String s = list.get(i);
@@ -248,6 +248,7 @@ public class Code11 {
             }
 
         }
+
         List<String> lista = list.subList(contador + 2, list.size());
         String[] coords;
 
@@ -257,6 +258,7 @@ public class Code11 {
 
         int coordX = Integer.parseInt(coords[0]);
         int coordY = Integer.parseInt(coords[1]);
+
 
 
 
@@ -286,13 +288,25 @@ public class Code11 {
 
             result2 = leerLinea(coordX, rgbList, result2, coordY, coordY/2);
 
-
+        System.out.println(result2);
             if (decode(result1.toString()) == null){
+                if (decode(result2.toString()) == null){
+                    return decode(invertirPatron(result2.toString()));
+                }
                 return decode(result2.toString());
+
             }
         return decode(result1.toString());
     }
 
+    private static String invertirPatron(String codigo) {
+        String resultado = "";
+        for (int i = 0; i < codigo.length(); i++) {
+            char a = codigo.charAt(codigo.length()-i-1);
+            resultado+=a;
+        }
+        return resultado;
+    }
 
 
     private static StringBuilder leerLinea(int coordX, List<String> rgbList, StringBuilder result, int coordY, int numeroLinea) {
