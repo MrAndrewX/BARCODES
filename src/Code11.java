@@ -9,6 +9,8 @@
 
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Code11 {
 
@@ -17,7 +19,7 @@ public class Code11 {
         int contador = 0;
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '*'){
+            if (s.charAt(i) == '*') {
                 result.append("█ ██  █");
                 contador++;
             }
@@ -54,11 +56,11 @@ public class Code11 {
             if (s.charAt(i) == '-') {
                 result.append("█ ██ █");
             }
-            if (i != s.length()-1){
+            if (i != s.length() - 1) {
                 result.append(" ");
             }
-            }
-        if (contador != 2){
+        }
+        if (contador != 2) {
             return null;
         }
 
@@ -74,45 +76,63 @@ public class Code11 {
         List<Integer> numbers = new ArrayList<>();
         int numerolinea = 0;
 
+
         int j = 0;
-        for (int i = 0; i < str.length();) {
+        for (int i = 0; i < str.length(); ) {
             char c = str.charAt(i);
             char k = str.charAt(j);
-
-            if (c == k){
-
+            //Este algoritmo introduce dentro de una lista el numero de veces que aparece el mismo caracter.
+            if (c == k) {
                 numerolinea++;
-
-                if (j == str.length()-1){
+                if (j == str.length() - 1) {
                     numbers.add(numerolinea);
                     break;
                 }
                 j++;
-            }else {
+            } else {
                 numbers.add(numerolinea);
                 i += numerolinea;
                 numerolinea = 0;
             }
-
         }
         //Sacamos de la lista el valor mayor y el valor menor para poder decidir que interpretar como linea gruesa o delgada.
-        int max = Collections.max(numbers);
-        int min = Collections.min(numbers);
-        System.out.println(max);
-        System.out.println(min);
+        int max = getMax(numbers);
+        int min = getMin(numbers);
+//
+//        System.out.println(max);
+//        System.out.println(min);
+
 
         int limite = max;
 
-        while (limite >= min){
-            String m = decodeNum(limite,numbers);
-            if (m == null){
+        while (limite >= min) {
+            String m = decodeNum(limite, numbers);
+            if (m == null) {
                 limite--;
-            }else{
+            } else {
                 return m;
             }
         }
         return null;
 
+    }
+    public static int getMax(List<Integer> numbers){
+        int max = 0;
+        for(int i=0; i<numbers.size(); i++){
+            if(numbers.get(i) > max){
+                max = numbers.get(i);
+            }
+        }
+        return max;
+    }
+    public static int getMin(List<Integer> numbers){
+        int min = 200;
+        for(int i=0; i<numbers.size(); i++){
+            if(numbers.get(i) < min){
+                min = numbers.get(i);
+            }
+        }
+        return min;
     }
 
     private static String decodeNum(int limite, List<Integer> numbers) {
@@ -120,18 +140,18 @@ public class Code11 {
         StringBuilder strvariable = new StringBuilder();
         StringBuilder cadena = new StringBuilder();
         StringBuilder caracter = new StringBuilder();
-        int contador= 0;
+        int contador = 0;
         for (int i = 0; i < numbers.size(); i++) {
-            if (numbers.get(i) >= limite){
+            if (numbers.get(i) >= limite) {
                 strvariable.append("1");
-            }else if (numbers.get(i) < limite){
+            } else if (numbers.get(i) < limite) {
                 strvariable.append("0");
             }
 
         }
 
-        System.out.println(numbers);
-        System.out.println(strvariable);
+        //System.out.println(numbers);
+        //System.out.println(strvariable);
 
 
         for (int i = 0; i < strvariable.length(); i++) {
@@ -152,98 +172,141 @@ public class Code11 {
                 cadena = new StringBuilder();
             }
 
-            if (cadena.toString().equals("000010")){
+            if (cadena.toString().equals("000010")) {
                 caracter.append("0");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("100010")){
+            if (cadena.toString().equals("100010")) {
                 caracter.append("1");
                 cadena = new StringBuilder();
 
             }
-            if (cadena.toString().equals("010010")){
+            if (cadena.toString().equals("010010")) {
                 caracter.append("2");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("110000")){
+            if (cadena.toString().equals("110000")) {
                 caracter.append("3");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("001010")){
+            if (cadena.toString().equals("001010")) {
                 caracter.append("4");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("101000")){
+            if (cadena.toString().equals("101000")) {
                 caracter.append("5");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("011000")){
+            if (cadena.toString().equals("011000")) {
                 caracter.append("6");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("000110")){
+            if (cadena.toString().equals("000110")) {
                 caracter.append("7");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("100100")){
+            if (cadena.toString().equals("100100")) {
                 caracter.append("8");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("100000")){
+            if (cadena.toString().equals("100000")) {
                 caracter.append("9");
                 cadena = new StringBuilder();
             }
-            if (cadena.toString().equals("001000")){
+            if (cadena.toString().equals("001000")) {
                 caracter.append("-");
                 cadena = new StringBuilder();
             }
 
         }
 
-        if (contador != 2){
+        if (contador != 2) {
             return null;
-        }else return caracter.toString();
+        } else return caracter.toString();
     }
 
 
     // Decodifica una imatge. La imatge ha d'estar en format "ppm"
     public static String decodeImage(String str) {
-        System.out.println(str.length());
+
         List<String> list = new ArrayList<>();
 
+
         list = List.of(str.split("\n"));
-        //System.out.println(list);
-        String[] cordinates = list.get(2).split(" ");
-        int coordX = Integer.parseInt(cordinates[0]);
-        int coordY = Integer.parseInt(cordinates[1]);
-        System.out.println("X:"+coordX+" y:"+coordY);
+
+
+        String matches = "";
+
+        Pattern p = Pattern.compile("\\d{3}\\s\\d{3}");
+        int contador = 0;
+        for (int i = 0; i<list.size();i++) {
+        String s = list.get(i);
+            if (p.matcher(s).matches()) {
+                matches+=s;
+                contador = i;
+
+            }
+
+        }
+        List<String> lista = list.subList(contador + 2, list.size());
+        String[] coords;
+
+        coords = matches.split(" ");
+
+
+
+        int coordX = Integer.parseInt(coords[0]);
+        int coordY = Integer.parseInt(coords[1]);
+
+
+
+        System.out.println("X:" + coordX + " y:" + coordY);
 
         List<String> parsedListWithoutText = new ArrayList<>();
-        parsedListWithoutText = list.subList(4,list.size());
-        //System.out.println(parsedListWithoutText);
+        parsedListWithoutText = lista;
+//        System.out.println(parsedListWithoutText);
         List<String> rgbList = new ArrayList<>();
 
         for (int i = 0; i < parsedListWithoutText.size(); i+=3) {
             rgbList.add((String.valueOf((
                     Integer.parseInt(parsedListWithoutText.get(i)) +
-                    Integer.parseInt(parsedListWithoutText.get(i+1)) +
-                    Integer.parseInt(parsedListWithoutText.get(i+2))/3))));
+                            Integer.parseInt(parsedListWithoutText.get(i+1)) +
+                            Integer.parseInt(parsedListWithoutText.get(i+2))/3))));
 
         }
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < coordX; i++) {
-            if (Integer.parseInt(rgbList.get(i)) < 100){
+        //System.out.println(list);
+        StringBuilder result1 = new StringBuilder();
+        StringBuilder result2 = new StringBuilder();
+        int numeroLinea = 1;
+
+
+
+            result1 = leerLinea(coordX, rgbList, result1, coordY, numeroLinea);
+
+
+            result2 = leerLinea(coordX, rgbList, result2, coordY, coordY/2);
+
+
+            if (decode(result1.toString()) == null){
+                return decode(result2.toString());
+            }
+        return decode(result1.toString());
+    }
+
+
+
+    private static StringBuilder leerLinea(int coordX, List<String> rgbList, StringBuilder result, int coordY, int numeroLinea) {
+        for (int i = (numeroLinea*coordX)-coordX; i < coordX*numeroLinea; i++) {
+            if (Integer.parseInt(rgbList.get(i)) < 100) {
                 result.append("█");
-            }else{
+            } else {
                 result.append(" ");
             }
+
         }
-        System.out.println(result);
-
-
-
-        return decode(result.toString());
+        return result;
     }
+
 
     // Genera imatge a partir de codi de barres
     // Alçada: 100px
