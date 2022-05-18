@@ -290,6 +290,7 @@ public class Code11 {
 
         System.out.println(result2);
             if (decode(result1.toString()) == null){
+                //En el caso de que sea null, sabremos que será un codigo de barras invertido.
                 if (decode(result2.toString()) == null){
                     return decode(invertirPatron(result2.toString()));
                 }
@@ -326,6 +327,97 @@ public class Code11 {
     // Alçada: 100px
     // Marges: vertical 4px, horizontal 8px
     public static String generateImage(String s) {
-        return "";
+        String encoded = encodechangeGrosor(s);
+        System.out.println(encoded);
+
+        List<String> lista = new ArrayList<>();
+        String result = "";
+        result+="P3\n";
+
+        int longitudX = encoded.length()+16;
+        result+=longitudX+" "+"108\n";
+        result+="255\n";
+        //Margen vertical
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < longitudX; j++) {
+                result+="255\n255\n255\n";
+            }
+
+        }
+
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 8; j++) {
+                result+="255\n255\n255\n";
+            }
+
+            for (int j = 0; j < encoded.length(); j++) {
+                char c = encoded.charAt(j);
+                if (c == '█'){
+                    result+="0\n0\n0\n";
+                }
+                if (c == ' '){
+                    result+="255\n255\n255\n";
+                }
+            }
+            for (int j = 0; j < 8; j++) {
+                result+="255\n255\n255\n";
+            }
+
+
+        }
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < longitudX; j++) {
+                result+="255\n255\n255\n";
+            }
+
+        }
+
+        System.out.println(result);
+
+        return result.trim();
+    }
+
+    private static String encodechangeGrosor(String s) {
+        String encoded = encode(s);
+
+        System.out.println(encoded);
+        String result = "";
+        int j = 1;
+        for (int i = 0; i < encoded.length()-1;i++) {
+            char c = encoded.charAt(i);
+            char k = encoded.charAt(j);
+
+            if (c == '█' && k == ' '){
+                result+="███";
+                j++;
+                continue;
+
+            }
+
+            if ((c == ' ' && k == '█')){
+                result+="   ";
+                j++;
+                continue;
+            }
+            if ((c == '█' && k == '█')){
+                result+="███████";
+                j++;
+                continue;
+            }
+            if ((c == ' ' && k == ' ')){
+                result+="       ";
+                j++;
+                continue;
+
+            }
+
+
+
+        }
+        result =result+"███";
+
+
+        return result;
     }
 }
