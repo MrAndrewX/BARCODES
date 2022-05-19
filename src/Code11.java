@@ -9,7 +9,6 @@
 
 
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Code11 {
@@ -18,6 +17,8 @@ public class Code11 {
     static String encode(String s) {
         int contador = 0;
         StringBuilder result = new StringBuilder();
+
+
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '*') {
                 result.append("█ ██  █");
@@ -74,6 +75,31 @@ public class Code11 {
         //Trim elimina los espacios sobrantes al principio y al final de la String
         String str = s.trim();
         List<Integer> numbers = new ArrayList<>();
+
+        numbers = countSameCharsOnAList(numbers,str);
+        //Sacamos de la lista el valor mayor y el valor menor para poder decidir que interpretar como linea gruesa o delgada.
+        int max = getMax(numbers);
+        int min = getMin(numbers);
+
+        int limite = max;
+
+        //Este bucle nos permite identificar el patron correcto de una string, vamos a ir probando hasta que el resultado de m sea uno valido.
+        // En el caso contrario, vamos disminuyendo el limite para formar diferentes patrones
+
+        while (limite >= min) {
+            String m = decodeNum(limite, numbers);
+            if (m == null) {
+                limite--;
+            } else {
+                return m;
+            }
+        }
+
+        return null;
+
+    }
+
+    private static List<Integer> countSameCharsOnAList(List<Integer> numbers, String str) {
         int numerolinea = 0;
 
 
@@ -95,46 +121,31 @@ public class Code11 {
                 numerolinea = 0;
             }
         }
-        //Sacamos de la lista el valor mayor y el valor menor para poder decidir que interpretar como linea gruesa o delgada.
-        int max = getMax(numbers);
-        int min = getMin(numbers);
-//
-//        System.out.println(max);
-//        System.out.println(min);
-
-
-        int limite = max;
-
-        while (limite >= min) {
-            String m = decodeNum(limite, numbers);
-            if (m == null) {
-                limite--;
-            } else {
-                return m;
-            }
-        }
-        return null;
-
+        return numbers;
     }
-    public static int getMax(List<Integer> numbers){
+
+    //Metodo para recuperar el valor mayor de una lista
+    public static int getMax(List<Integer> numbers) {
+
         int max = 0;
-        for(int i=0; i<numbers.size(); i++){
-            if(numbers.get(i) > max){
-                max = numbers.get(i);
+        for (Integer number : numbers) {
+            if (number > max) {
+                max = number;
             }
         }
         return max;
     }
-    public static int getMin(List<Integer> numbers){
+    //Metodo para recuperar el valor minimo de una lista
+    public static int getMin(List<Integer> numbers) {
         int min = 200;
-        for(int i=0; i<numbers.size(); i++){
-            if(numbers.get(i) < min){
-                min = numbers.get(i);
+        for (Integer number : numbers) {
+            if (number < min) {
+                min = number;
             }
         }
         return min;
     }
-
+    //En esta funcion decodificamos las franjas negras y blancas con su respectivo numero segun el ancho que tenga
     private static String decodeNum(int limite, List<Integer> numbers) {
 
         StringBuilder strvariable = new StringBuilder();
@@ -150,9 +161,14 @@ public class Code11 {
 
         }
 
-        //System.out.println(numbers);
-        //System.out.println(strvariable);
 
+
+        return binarioASimbolo(strvariable,cadena,contador,caracter);
+
+    }
+
+    //En este metodo nos entra una string de caracteres binarios y devolvemos un codigo descodificado
+    private static String binarioASimbolo(StringBuilder strvariable, StringBuilder cadena, int contador, StringBuilder caracter) {
 
         for (int i = 0; i < strvariable.length(); i++) {
 
@@ -219,7 +235,7 @@ public class Code11 {
             }
 
         }
-
+        //Este if nos permite validar el resultado, ya que un resultado solo puede contener 2 simbolos "*", en cualquier otro caso, la string será null.
         if (contador != 2) {
             return null;
         } else return caracter.toString();
@@ -237,23 +253,24 @@ public class Code11 {
 
         String matches = "";
 
+        //En esta parte, solo buscamos con expresion regular, un conjunto de dos digitos separados por un espacio. Que son la coordX y la coordY
         Pattern p = Pattern.compile("\\d+\\s\\d+");
         int contador = 0;
-        for (int i = 0; i<list.size();i++) {
-        String s = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
             if (p.matcher(s).matches()) {
-                matches+=s;
+                matches += s;
                 contador = i;
 
             }
 
         }
 
+        //A continuacion hacemos una lista a partir de la expresion encontrada. Para que ahora en la lista solo nos preocupemos de los valores RGB
         List<String> lista = list.subList(contador + 2, list.size());
         String[] coords;
 
         coords = matches.split(" ");
-
 
 
         int coordX = Integer.parseInt(coords[0]);
@@ -262,56 +279,63 @@ public class Code11 {
 
 
 
-        System.out.println("X:" + coordX + " y:" + coordY);
-
-        List<String> parsedListWithoutText = new ArrayList<>();
-        parsedListWithoutText = lista;
-//        System.out.println(parsedListWithoutText);
         List<String> rgbList = new ArrayList<>();
 
-        for (int i = 0; i < parsedListWithoutText.size(); i+=3) {
-            rgbList.add((String.valueOf((
-                    Integer.parseInt(parsedListWithoutText.get(i)) +
-                            Integer.parseInt(parsedListWithoutText.get(i+1)) +
-                            Integer.parseInt(parsedListWithoutText.get(i+2))/3))));
+        // Ahora, para interpretar los valores lo que hacemos es crear otra lista, pero el contenido de esta sera la media de los 3 valores RGB
+        rgbList = makeAvgFromRGBItems(lista,rgbList);
 
-        }
-        //System.out.println(list);
         StringBuilder result1 = new StringBuilder();
         StringBuilder result2 = new StringBuilder();
-        int numeroLinea = 1;
 
 
+        //Tengo dos resultados, uno es para los que tienen la primera linea valida y el otro resultado para los que no tiene la primera valida y validamos la linea del medio
 
-            result1 = leerLinea(coordX, rgbList, result1, coordY, numeroLinea);
+        result1 = leerLinea(coordX, rgbList, result1, coordY, 1);
 
 
-            result2 = leerLinea(coordX, rgbList, result2, coordY, coordY/2);
+        result2 = leerLinea(coordX, rgbList, result2, coordY, coordY / 2);
 
-        System.out.println(result2);
-            if (decode(result1.toString()) == null){
-                //En el caso de que sea null, sabremos que será un codigo de barras invertido.
-                if (decode(result2.toString()) == null){
-                    return decode(invertirPatron(result2.toString()));
-                }
-                return decode(result2.toString());
+        //Si el resultado1 es null, devolveremos resultado2, si no devolveremos el resultado 1
+        if (decode(result1.toString()) == null) {
 
+            //En el caso de que sea null, sabremos que será un codigo de barras invertido.
+
+            if (decode(result2.toString()) == null) {
+
+                return decode(invertirPatron(result2.toString()));
             }
+            return decode(result2.toString());
+
+        }
         return decode(result1.toString());
+
     }
 
+    //Esta funcion hace el promedio de los 3 valores RGB y los almacena en un unico elemento de la lista
+    private static List<String> makeAvgFromRGBItems(List<String> lista, List<String> rgbList) {
+        for (int i = 0; i < lista.size(); i += 3) {
+            rgbList.add((String.valueOf((
+                    Integer.parseInt(lista.get(i)) +
+                            Integer.parseInt(lista.get(i + 1)) +
+                            Integer.parseInt(lista.get(i + 2)) / 3))));
+
+        }
+        return rgbList;
+    }
+
+    //Esta funcion invierte el string en el caso que tengamos un barcode dado la vuelta
     private static String invertirPatron(String codigo) {
         String resultado = "";
         for (int i = 0; i < codigo.length(); i++) {
-            char a = codigo.charAt(codigo.length()-i-1);
-            resultado+=a;
+            char a = codigo.charAt(codigo.length() - i - 1);
+            resultado += a;
         }
         return resultado;
     }
 
-
+    //Esta funcion nos permite traducir de un codigo rgb a caracteres ascii.
     private static StringBuilder leerLinea(int coordX, List<String> rgbList, StringBuilder result, int coordY, int numeroLinea) {
-        for (int i = (numeroLinea*coordX)-coordX; i < coordX*numeroLinea; i++) {
+        for (int i = (numeroLinea * coordX) - coordX; i < coordX * numeroLinea; i++) {
             if (Integer.parseInt(rgbList.get(i)) < 100) {
                 result.append("█");
             } else {
@@ -328,94 +352,105 @@ public class Code11 {
     // Marges: vertical 4px, horizontal 8px
     public static String generateImage(String s) {
         String encoded = encodechangeGrosor(s);
-        System.out.println(encoded);
-
-        List<String> lista = new ArrayList<>();
-        String result = "";
-        result+="P3\n";
-
-        int longitudX = encoded.length()+16;
-        result+=longitudX+" "+"108\n";
-        result+="255\n";
-        //Margen vertical
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < longitudX; j++) {
-                result+="255\n255\n255\n";
-            }
-
-        }
-
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 8; j++) {
-                result+="255\n255\n255\n";
-            }
-
-            for (int j = 0; j < encoded.length(); j++) {
-                char c = encoded.charAt(j);
-                if (c == '█'){
-                    result+="0\n0\n0\n";
-                }
-                if (c == ' '){
-                    result+="255\n255\n255\n";
-                }
-            }
-            for (int j = 0; j < 8; j++) {
-                result+="255\n255\n255\n";
-            }
 
 
-        }
+        String result = generateStringImage(encoded);
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < longitudX; j++) {
-                result+="255\n255\n255\n";
-            }
-
-        }
-
-        System.out.println(result);
 
         return result.trim();
     }
 
+    private static String generateStringImage(String encoded) {
+        List<String> lista = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
+        int longitudX = encoded.length() + 16;
+        System.out.println(encoded);
+
+        //Esta funcion nos construye el inicio de la string, nos define el comentario, longitud X, Longitud Y y el color maximo, que será 255.
+        construirInicioDeImagen(result, encoded, longitudX);
+
+        int margenHorizontal = 8;
+        int margenVertical = 4;
+
+        //Margen vertical
+
+        addVerticalMarge(margenVertical, result, longitudX);
+
+        //Esta es la estructura de la imagen, basicamente el traductor de ASCII a valores RGB.
+        for (int i = 0; i < 100; i++) {
+
+            //Añadimos un margen horizontal de una longitud de 8 pixeles.
+            addHorizontalMarge(margenHorizontal, result, longitudX);
+
+            for (int j = 0; j < encoded.length(); j++) {
+                char c = encoded.charAt(j);
+                if (c == '█') {
+                    result.append("0\n0\n0\n");
+                }
+                if (c == ' ') {
+                    result.append("255\n255\n255\n");
+                }
+            }
+
+            addHorizontalMarge(margenHorizontal, result, longitudX);
+
+        }
+        addVerticalMarge(margenVertical, result, longitudX);
+
+        return result.toString();
+    }
+
+    private static void construirInicioDeImagen(StringBuilder result, String encoded, int longitudX) {
+        result.append("P3\n");
+        result.append(longitudX).append(" ").append("108\n");
+        result.append("255\n");
+    }
+
+    private static void addHorizontalMarge(int i, StringBuilder result, int longitudX) {
+        result.append("255\n255\n255\n".repeat(8));
+    }
+
+    private static void addVerticalMarge(int i, StringBuilder result, int longitudX) {
+        result.append("255\n255\n255\n".repeat(Math.max(0, longitudX)).repeat(i));
+    }
+
+    //Esta funcion traduce los grosores de 1 y 2 a unos de 3 y 10
     private static String encodechangeGrosor(String s) {
         String encoded = encode(s);
 
-        System.out.println(encoded);
         String result = "";
         int j = 1;
-        for (int i = 0; i < encoded.length()-1;i++) {
+        for (int i = 0; i < encoded.length() - 1; i++) {
             char c = encoded.charAt(i);
             char k = encoded.charAt(j);
 
-            if (c == '█' && k == ' '){
-                result+="███";
+            if (c == '█' && k == ' ') {
+                result += "███";
                 j++;
                 continue;
 
             }
 
-            if ((c == ' ' && k == '█')){
-                result+="   ";
+            if ((c == ' ' && k == '█')) {
+                result += "   ";
                 j++;
                 continue;
             }
-            if ((c == '█' && k == '█')){
-                result+="███████";
+            if ((c == '█' && k == '█')) {
+                result += "███████";
                 j++;
                 continue;
             }
-            if ((c == ' ' && k == ' ')){
-                result+="       ";
+            if ((c == ' ' && k == ' ')) {
+                result += "       ";
                 j++;
                 continue;
 
             }
-
 
 
         }
-        result =result+"███";
+        result = result + "███";
 
 
         return result;
