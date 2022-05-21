@@ -76,7 +76,9 @@ public class Code11 {
         String str = s.trim();
         List<Integer> numbers = new ArrayList<>();
 
-        numbers = countSameCharsOnAList(numbers,str);
+        //En esta funcion vamos a crear una lista de integers, cada elemento dera el numero de veces que se repite el mismo caracter hasta que sea diferente.
+        countSameCharsOnAList(numbers, str);
+
         //Sacamos de la lista el valor mayor y el valor menor para poder decidir que interpretar como linea gruesa o delgada.
         int max = getMax(numbers);
         int min = getMin(numbers);
@@ -247,53 +249,56 @@ public class Code11 {
 
         List<String> list = new ArrayList<>();
 
-
         list = List.of(str.split("\n"));
-
 
         String matches = "";
 
         //En esta parte, solo buscamos con expresion regular, un conjunto de dos digitos separados por un espacio. Que son la coordX y la coordY
         Pattern p = Pattern.compile("\\d+\\s\\d+");
         int contador = 0;
-        for (int i = 0; i < list.size(); i++) {
+
+        for (int i = 0; i < 10; i++) {
+
+            //El valor maximo "10" es para optimizar un poco mas el programa, ya que seguro que en las 10 primeras posiciones encontramos x y y y así
+            //No tendremos que recorrer toda la lista
+
             String s = list.get(i);
             if (p.matcher(s).matches()) {
                 matches += s;
                 contador = i;
-
+                break;
             }
-
         }
 
-        //A continuacion hacemos una lista a partir de la expresion encontrada. Para que ahora en la lista solo nos preocupemos de los valores RGB
+        //A continuacion hacemos una lista a partir de la expresion encontrada.
+        // Para que ahora en la lista solo nos preocupemos de los valores RGB
         List<String> lista = list.subList(contador + 2, list.size());
+
+        //En esta array de strings guardaremos las coordenadas X y Y de la imagen
+
         String[] coords;
 
         coords = matches.split(" ");
 
-
         int coordX = Integer.parseInt(coords[0]);
         int coordY = Integer.parseInt(coords[1]);
-
-
-
 
         List<String> rgbList = new ArrayList<>();
 
         // Ahora, para interpretar los valores lo que hacemos es crear otra lista, pero el contenido de esta sera la media de los 3 valores RGB
-        rgbList = makeAvgFromRGBItems(lista,rgbList);
+        makeAvgFromRGBItems(lista,rgbList);
 
         StringBuilder result1 = new StringBuilder();
         StringBuilder result2 = new StringBuilder();
 
 
+
         //Tengo dos resultados, uno es para los que tienen la primera linea valida y el otro resultado para los que no tiene la primera valida y validamos la linea del medio
 
-        result1 = leerLinea(coordX, rgbList, result1, coordY, 1);
+        leerLinea(coordX, rgbList, result1, coordY, 1);
 
 
-        result2 = leerLinea(coordX, rgbList, result2, coordY, coordY / 2);
+        leerLinea(coordX, rgbList, result2, coordY, coordY / 2);
 
         //Si el resultado1 es null, devolveremos resultado2, si no devolveremos el resultado 1
         if (decode(result1.toString()) == null) {
@@ -310,6 +315,8 @@ public class Code11 {
         return decode(result1.toString());
 
     }
+
+
 
     //Esta funcion hace el promedio de los 3 valores RGB y los almacena en un unico elemento de la lista
     private static List<String> makeAvgFromRGBItems(List<String> lista, List<String> rgbList) {
@@ -353,9 +360,7 @@ public class Code11 {
     public static String generateImage(String s) {
         String encoded = encodechangeGrosor(s);
 
-
         String result = generateStringImage(encoded);
-
 
         return result.trim();
     }
@@ -447,11 +452,8 @@ public class Code11 {
                 continue;
 
             }
-
-
         }
         result = result + "███";
-
 
         return result;
     }
