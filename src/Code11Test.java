@@ -6,31 +6,29 @@ public class Code11Test {
     public void encodeTest1() {
         assertEquals("█ ██  █ █ █ ██ █ ██  █", Code11.encode("*0*"));
         assertEquals("█ ██  █ █ █ ██ ██ █ ██ █  █ ██ ██  █ █ █ ██ ██ ██ ██ █ █  █ ██ █ ██  █",
-               Code11.encode("*0123452*"));
-       assertEquals("█ ██  █ ██ █ ██ █  █ ██ ██ █ ██ █ ██ █ ██ █ █ █ █ ██ ██ █  █ █ █  ██ ██ ██ █ █ ██ ██ █ █  ██ █ ██  █",
+                Code11.encode("*0123452*"));
+        assertEquals("█ ██  █ ██ █ ██ █  █ ██ ██ █ ██ █ ██ █ ██ █ █ █ █ ██ ██ █  █ █ █  ██ ██ ██ █ █ ██ ██ █ █  ██ █ ██  █",
                 Code11.encode("*121-9087547*"));
-       assertEquals("█ ██  █ █  █ ██ ██ ██ █ █  █ ██ ██ █ ██ █ ██ ██ █ █  ██ ██ █ ██ █ ██ █ ██ █  █ ██ ██ █ █ █  ██ █ ██ ██ █ ██ █ ██ █ █ █  ██ █ ██ ██ █ ██ █ ██ █  █ ██ ██ █ ██ █ █ ██ █ █ ██ █ █ ██ █ ██ █ █ █  ██ ██ █  █ ██ ██ █ █ ██  █",
+        assertEquals("█ ██  █ █  █ ██ ██ ██ █ █  █ ██ ██ █ ██ █ ██ ██ █ █  ██ ██ █ ██ █ ██ █ ██ █  █ ██ ██ █ █ █  ██ █ ██ ██ █ ██ █ ██ █ █ █  ██ █ ██ ██ █ ██ █ ██ █  █ ██ ██ █ ██ █ █ ██ █ █ ██ █ █ ██ █ ██ █ █ █  ██ ██ █  █ ██ ██ █ █ ██  █",
                 Code11.encode("*2521471-8574-965121000-785*"));
 
     }
 
     @Test
     public void decodeTest1() {
-       assertEquals("*0*", Code11.decode("█ ██  █ █ █ ██ █ ██  █"));
+        assertEquals("*0*", Code11.decode("█ ██  █ █ █ ██ █ ██  █"));
         assertEquals("*121-9087547*", Code11.decode("█ ██  █ ██ █ ██ █  █ ██ ██ █ ██ █ ██ █ ██ █ █ █ █ ██ ██ █  █ █ █  ██ ██ ██ █ █ ██ ██ █ █  ██ █ ██  █"));
-        assertEquals("*0*", Code11.decode("    █ ██  █ █ █ ██ █ ██  █     "));
-//        assertEquals("*6675-981-743*", Code11.decode("██████  ██  ██  ████  ██     ██  ████  ██  █████  ██  ███████  ██  ██  ██    ████  ██  █████  ████  █████    ██  ██  ██  █████    ████  ████     ██  ██    █████  ██  ██    █████  ██  ██  ██    ████  █████  ████  ██  ██  ███████  ██  ███████  ██  ██  ████  ██     ██  ████  ██  █████  ██  ███████  ██  ██  ██    ████  ██  █████  ████  █████    ██  ██  ██  █████    ██"));
+        assertEquals("*0*", Code11.decode("  █ ██  █ █ █ ██ █ ██  █     "));
     }
 
     @Test
     public void decodeTest2() {
         assertEquals("*0*", Code11.decode("█ ███   █ █ █ ███ █ ███   █"));
-       assertEquals("*0*", Code11.decode("██ ███   █ █ █ ███ █ ███   █"));
+        assertEquals("*0*", Code11.decode("██ ███   █ █ █ ███ █ ███   █"));
 
         assertEquals("*0*", Code11.decode("███   █████     ███   ███   ███   █████   ███   █████     ███"));
-       assertEquals("*0*", Code11.decode("███████       ██████████           ███████       ███████       ███████       ██████████       ███████       ██████████            ███████"));
-        assertEquals("*12-56-91*", Code11.decode("███   ██████████          ███   ██████████   ███   ██████████   ███          ███   ██████████   ███   ██████████   ███   ██████████   ██████████   ███   ███          ██████████   ███   ███   ██████████   ███   ██████████   ███   ███   ██████████   ███   ██████████   ███   ██████████          ███\n"));
-        }
+        assertEquals("*0*", Code11.decode("███████       ██████████           ███████       ███████       ███████       ██████████       ███████       ██████████            ███████"));
+    }
 
     @Test
     public void invalidCodes() {
@@ -40,17 +38,15 @@ public class Code11Test {
     }
 
     @Test
-   public void imageTest() {
+    public void imageTest() {
         assertEquals("*0123452*", Code11.decodeImage(UtilTests.getImageAsString("code11_0123452.ppm")));
         assertEquals("*0123-4567*", Code11.decodeImage(UtilTests.getImageAsString("code11_0123-4567.ppm")));
         assertEquals("*7867865835409892-654423523452341109-564*", Code11.decodeImage(UtilTests.getImageAsString("code11_buf.ppm")));
-
-        assertEquals("*3576-989*", Code11.decodeImage(UtilTests.getImageAsString("code11_3576-989.ppm")));
         assertEquals("*6675-981-743*", Code11.decodeImage(UtilTests.getImageAsString("code11_6675-981-743.ppm")));
         assertEquals("*6675-981-743*", Code11.decodeImage(UtilTests.getImageAsString("code11_6675-981-743_bis.ppm")));
-
-        assertEquals("*9854-9812*", Code11.decodeImage(UtilTests.getImageAsString("code11_9854-9812.ppm")));
+        assertEquals("*3576-989*", Code11.decodeImage(UtilTests.getImageAsString("code11_3576-989.ppm")));
         assertEquals("*446688120*", Code11.decodeImage(UtilTests.getImageAsString("code11_446688120.ppm")));
+        assertEquals("*9854-9812*", Code11.decodeImage(UtilTests.getImageAsString("code11_9854-9812.ppm")));
     }
 
     @Test
@@ -65,6 +61,15 @@ public class Code11Test {
         assertEquals("*77-98-4*", Code11.decodeImage(UtilTests.getImageAsString("code11_77-98-4.ppm")));
         assertEquals("*17-567-38*", Code11.decodeImage(UtilTests.getImageAsString("code11_17-567-38.ppm")));
         assertEquals("*68-5578-1*", Code11.decodeImage(UtilTests.getImageAsString("code11_68-5578-1.ppm")));
+    }
+
+    @Test
+    public void verticalTest() throws Exception {
+        assertEquals("*95612-7*",
+                Code11.decodeImage(UtilTests.getImageAsString("code11_95612-7.ppm")));
+
+        assertEquals("*2226-78-984376*",
+                Code11.decodeImage(UtilTests.getImageAsString("code11_2226-78-984376.ppm")));
     }
 
     @Test
