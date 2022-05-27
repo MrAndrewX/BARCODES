@@ -290,6 +290,7 @@ public class Code11 {
 
         StringBuilder result1 = new StringBuilder();
         StringBuilder result2 = new StringBuilder();
+        StringBuilder result3 = new StringBuilder();
 
 
 
@@ -299,6 +300,7 @@ public class Code11 {
 
 
         leerLinea(coordX, rgbList, result2, coordY, coordY / 2);
+        result3 = leerLineaVertical(coordX, rgbList, result3, coordY, coordX/2);
 
         //Si el resultado1 es null, devolveremos resultado2, si no devolveremos el resultado 1
         if (decode(result1.toString()) == null) {
@@ -306,7 +308,13 @@ public class Code11 {
             //En el caso de que sea null, sabremos que será un codigo de barras invertido.
 
             if (decode(result2.toString()) == null) {
-
+                if (decode(invertirPatron(result2.toString())) == null){
+                    // En el caso que la imagen vertical este en modo espejo, invertiremos la string
+                    if (decode(result3.toString()) == null){
+                        return decode(invertirPatron(result3.toString()));
+                    }
+                    return decode(result3.toString());
+                }
                 return decode(invertirPatron(result2.toString()));
             }
             return decode(result2.toString());
@@ -316,6 +324,20 @@ public class Code11 {
 
     }
 
+    private static StringBuilder leerLineaVertical(int coordX, List<String> rgbList, StringBuilder result, int coordY, int numeroLinea) {
+        for (int i = coordX/2; i < (coordX * coordY) - coordX/2; i++) {
+            if (Integer.parseInt(rgbList.get(i)) < 100) {
+                result.append("█");
+            } else {
+                result.append(" ");
+            }
+
+
+            i+=coordX-1;
+
+        }
+        return result;
+    }
 
 
     //Esta funcion hace el promedio de los 3 valores RGB y los almacena en un unico elemento de la lista
@@ -369,7 +391,7 @@ public class Code11 {
         List<String> lista = new ArrayList<>();
         StringBuilder result = new StringBuilder();
         int longitudX = encoded.length() + 16;
-        System.out.println(encoded);
+
 
         //Esta funcion nos construye el inicio de la string, nos define el comentario, longitud X, Longitud Y y el color maximo, que será 255.
         construirInicioDeImagen(result, encoded, longitudX);
