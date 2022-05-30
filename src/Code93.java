@@ -4,10 +4,14 @@ public class Code93 {
 
     // Codifica emprant Code93
     static String encode(String str) {
-        int contador = 0;
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(str);
+
 
         String s = str;
+        int checksum1 = 0;
+
+        StringBuilder resultVerbose;
+
 
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
@@ -15,8 +19,44 @@ public class Code93 {
                 continue;
             }
             int valor = valor(c);
-            System.out.println(" : " + (s.length()-i-1));
+            System.out.println(c +" : " + (s.length()-i-1) *  valor);
+            checksum1 += ((s.length()-i-1) *  valor);
+            if (i == 20){
+                break;
+            }
+
         }
+        checksum1 = checksum1 % 43;
+        result.deleteCharAt(result.length()-1);
+
+        result.append(valoraChar(checksum1));
+
+        int checksum2 = 0;
+        for (int i = 0; i < result.length(); i++) {
+            char c = result.charAt(i);
+            if (c == '*'){
+                continue;
+            }
+            int valor = valor(c);
+
+            checksum2 += ((((result.length()-i-1)+1) *  valor));
+
+            if (i == 15){
+                break;
+            }
+        }
+        result.append(valoraChar(checksum2));
+        result.append("*");
+        System.out.println(StringToAscci(String.valueOf(result)));
+
+
+        System.out.println(result);
+        return StringToAscci(result.toString()).toString();
+    }
+
+    private static StringBuilder StringToAscci(String s) {
+        StringBuilder result = new StringBuilder();
+        int contador = 0;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '*') {
                 result.append("█ █ ████");
@@ -157,7 +197,9 @@ public class Code93 {
                 result.append(" ");
             }
         }
-        return result.toString();
+        // Cierre
+        result.append(" █");
+        return result;
     }
 
     private static int valor(char c) {
@@ -200,6 +242,47 @@ public class Code93 {
             case 'Z': return 35;
         }
         return 0;
+    }
+    private static String valoraChar(int n) {
+        switch (n){
+            case 0: return "0";
+            case 1: return "1";
+            case 2: return "2";
+            case 3: return "3";
+            case 4: return "4";
+            case 5: return "5";
+            case 6: return "6";
+            case 7: return "7";
+            case 8: return "8";
+            case 9: return "9";
+            case 10: return "A";
+            case 11: return "B";
+            case 12: return "C";
+            case 13: return "D";
+            case 14: return "E";
+            case 15: return "F";
+            case 16: return "G";
+            case 17: return "H";
+            case 18: return "I";
+            case 19: return "J";
+            case 20: return "K";
+            case 21: return "L";
+            case 22: return "M";
+            case 23: return "N";
+            case 24: return "O";
+            case 25: return "P";
+            case 26: return "Q";
+            case 27: return "R";
+            case 28: return "S";
+            case 29: return "T";
+            case 30: return "U";
+            case 31: return "V";
+            case 32: return "W";
+            case 33: return "X";
+            case 34: return "Y";
+            case 35: return "Z";
+        }
+        return ".";
     }
 
     // Decodifica emprant Code93
