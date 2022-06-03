@@ -154,6 +154,7 @@ public class Code11 {
         StringBuilder cadena = new StringBuilder();
         StringBuilder caracter = new StringBuilder();
         int contador = 0;
+
         for (int i = 0; i < numbers.size(); i++) {
             if (numbers.get(i) >= limite) {
                 strvariable.append("1");
